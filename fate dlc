@@ -8,8 +8,6 @@
 多区域自动化Fate旨在与Fate_Farming_CN.lua配合使用。
 该脚本会按照区域列表依次刷Fate，直到当前区域没有符合条件的Fate为止，
 然后传送至下一个区域并重新启动刷Fate脚本。
-
-原作者: pot0to (https://ko-fi.com/pot0to)
         
     -> 1.0.2  添加时间检测
         添加了对死亡和意外战斗的检测
