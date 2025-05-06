@@ -1,12 +1,12 @@
 --[[
 ********************************************************************************
 *                                 天书自用魔改                              *
-*                                  Version 0.5                                *
+*                                   版本1.0                                 *
 ********************************************************************************
 
 
 ********************************************************************************
-*                                   所需插件                              *
+*                                     所需插件                              *
 ********************************************************************************
 1. Autoduty
 2. 任意自动循环
@@ -58,7 +58,7 @@ WonderousTailsDuties = {
         { instanceId=20092, dutyId=1169, dutyName="泽罗姆斯歼殛战", minLevel=90 }
     },
     { -- type 1: expansion cap dungeons
-        { dutyName="100级迷宫", dutyId=1242, minLevel=100 } --Yuweyawata Field Station
+        { dutyName="100级迷宫", dutyId=1199, minLevel=100 }, --忆中金曦亚历山德里亚
     },
     2,
     3,
@@ -77,19 +77,19 @@ WonderousTailsDuties = {
         { dutyName="伊甸希望乐园 再生之章", dutyId=942, minLevel=80 },
     },
     { -- type 5: leveling dungeons
-        { dutyName="1-49级迷宫", dutyId=172, minLevel=15 }, --The Aurum Vale
-        { dutyName="51-59级/61-69级/71-79级迷宫", dutyId=434, minLevel=51 }, --The Dusk Vigil
+        { dutyName="1-49级迷宫或讨伐战", dutyId=172, minLevel=15 }, --毒雾洞窟黄金谷
+        { dutyName="51-59级/61-69级/71-79级迷宫", dutyId=434, minLevel=51 }, --冰雪废堡暮卫塔
+        { dutyName="81-89级/91-99级迷宫", dutyId=970, minLevel=81 }, --末日树海万相森国
     },
     { -- type 6: expansion cap dungeons
-        { dutyName="51或60级迷宫", dutyId=362, minLevel=51 }, --Brayflox Longstop (Hard)
-        { dutyName="70或80级迷宫", dutyId=1172, minLevel=70 }, --the Drowned City of Skalla
-        { dutyName="81-89级/91-99级/", dutyId=970, minLevel=81 }, --Vanaspati
-        { dutyName="90级迷宫", dutyId=973, minLevel=90 }, --The Dead Ends
+        { dutyName="51或60级迷宫", dutyId=362, minLevel=51 }, --纷争要地布雷福洛克斯野营地
+        { dutyName="70或80级迷宫", dutyId=1172, minLevel=70 }, --沉没神殿斯卡拉遗迹
+        { dutyName="90级迷宫", dutyId=973, minLevel=90 }, --末世终迹
         
     },
     { -- type 7: ex trials
         {
-            { instanceId=20008, dutyId=295, dutyName="Trials (Lv. 50-60)", minLevel=50 }, -- 伊弗利特讨伐战
+            { instanceId=20008, dutyId=295, dutyName="Trials (Lv. 50-60)", minLevel=50 }, -- Bowl of Embers
             { instanceId=20049, dutyId=720, dutyName="Trials (Lv. 70-100)", minLevel=70 }
         }
     },
@@ -162,7 +162,7 @@ CurrentLevel = GetLevel()
 -- Pick up a journal if you need one
 if not HasWeeklyBingoJournal() or IsWeeklyBingoExpired() or WeeklyBingoNumPlacedStickers() == 9 then
     if not IsInZone(478) then
-        yield("/tp 田园郡")
+        yield("/tp Idyllshire")
         yield("/wait 1")
     end
     while not (IsInZone(478) and IsPlayerAvailable()) do
