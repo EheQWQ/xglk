@@ -1,41 +1,19 @@
 --[[
 ********************************************************************************
-*                                  天书自用魔改                               *
-*                                  Version 0.3                                *
+*                                 天书自用魔改                              *
+*                                  Version 0.5                                *
 ********************************************************************************
 
 
-Description: Picks up a Wondrous Tails journal from Khloe, then attempts each duty
-
-For dungeons:
-- Attempts dungeon Unsynced if duty is at least 20 levels below you
-- Attempts dungeon with Duty Support if duty is within 20 levels of you and Duty
-Support is available
-
-For EX Trials:
-- Attempts any duty unsynced if it is 20 levels below you and skips any that are
-within 20 levels
-- Note: Not all EX trials have BossMod support, but this script will attempt
-each one once anyways
-- Some EX trials are blacklisted due to mechanics that cannot be done solo
-(Byakko tank buster, Tsukuyomi meteors, etc.)
-
-Alliance Raids/PVP/Treasure Maps/Palace of the Dead
-- Skips them all
-
-
-    -> 0.2.0    Fixes for ex trials
-                Update for patch 7.1
-
 ********************************************************************************
-*                               Required Plugins                               *
+*                                   所需插件                              *
 ********************************************************************************
 1. Autoduty
 2. 任意自动循环
 3. BossModReborn (BMR) or Veyn's BossMod (VBM)
 
 ********************************************************************************
-*           Code: Don't touch this unless you know what you're doing           *
+*                   代码：除非你知道自己在做什么，否则不要碰这个           *
 ********************************************************************************
 ]]
 
@@ -80,7 +58,7 @@ WonderousTailsDuties = {
         { instanceId=20092, dutyId=1169, dutyName="泽罗姆斯歼殛战", minLevel=90 }
     },
     { -- type 1: expansion cap dungeons
-        { dutyName="100级迷宫", dutyId=1199, minLevel=100 } --Alexandria
+        { dutyName="100级迷宫", dutyId=1242, minLevel=100 } --Yuweyawata Field Station
     },
     2,
     3,
@@ -104,7 +82,8 @@ WonderousTailsDuties = {
     },
     { -- type 6: expansion cap dungeons
         { dutyName="51或60级迷宫", dutyId=362, minLevel=51 }, --Brayflox Longstop (Hard)
-        { dutyName="70或80级迷宫", dutyId=1146, minLevel=70 }, --Ala Mhigo
+        { dutyName="70或80级迷宫", dutyId=1172, minLevel=70 }, --the Drowned City of Skalla
+        { dutyName="81-89级/91-99级/", dutyId=970, minLevel=81 }, --Vanaspati
         { dutyName="90级迷宫", dutyId=973, minLevel=90 }, --The Dead Ends
         
     },
