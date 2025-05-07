@@ -277,4 +277,4 @@ for i = 0, 12 do
     -- end
 end
 
-yield("/echo Completed all Wonderous Tails entries it is capable of.<se.3>")
+yield("/echo 少爷公主你的天书完成了")
