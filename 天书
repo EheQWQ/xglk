@@ -162,7 +162,7 @@ CurrentLevel = GetLevel()
 -- Pick up a journal if you need one
 if not HasWeeklyBingoJournal() or IsWeeklyBingoExpired() or WeeklyBingoNumPlacedStickers() == 9 then
     if not IsInZone(478) then
-        yield("/tp Idyllshire")
+        yield("/tp 田园郡")
         yield("/wait 1")
     end
     while not (IsInZone(478) and IsPlayerAvailable()) do
