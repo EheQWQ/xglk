@@ -78,11 +78,11 @@ WonderousTailsDuties = {
     },
     { -- type 5: leveling dungeons
         { dutyName="1-49级迷宫或讨伐战", dutyId=172, minLevel=15 }, --毒雾洞窟黄金谷
-        { dutyName="50或60级迷宫", dutyId=1063, minLevel=15 }, --幻龙残骸密约之塔
         { dutyName="51-59级/61-69级/71-79级迷宫", dutyId=1064, minLevel=53 }, --天山绝顶索姆阿尔灵峰
         { dutyName="81-89级/91-99级迷宫", dutyId=970, minLevel=81 }, --末日树海万相森国
     },
     { -- type 6: expansion cap dungeons
+        { dutyName="50或60级迷宫", dutyId=1063, minLevel=15 }, --幻龙残骸密约之塔
         { dutyName="51或60级迷宫", dutyId=362, minLevel=51 }, --纷争要地布雷福洛克斯野营地
         { dutyName="70或80级迷宫", dutyId=1172, minLevel=70 }, --沉没神殿斯卡拉遗迹
         { dutyName="90级迷宫", dutyId=973, minLevel=90 }, --末世终迹
