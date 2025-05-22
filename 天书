@@ -80,7 +80,7 @@ WonderousTailsDuties = {
         { dutyName="81-89级/91-99级迷宫", dutyId=970, minLevel=81 }, --末日树海万相森国
     },
     { -- type 6: expansion cap dungeons
-        { dutyName="51或60级迷宫", dutyId=362, minLevel=51 }, --纷争要地布雷福洛克斯野营地
+        { dutyName="50或60级迷宫", dutyId=1063, minLevel=15 }, --幻龙残骸密约之塔
         { dutyName="70或80级迷宫", dutyId=1172, minLevel=70 }, --沉没神殿斯卡拉遗迹
         { dutyName="90级迷宫", dutyId=973, minLevel=90 }, --末世终迹
         
@@ -275,4 +275,4 @@ for i = 0, 12 do
     -- end
 end
 
-yield("/echo Completed all Wonderous Tails entries it is capable of.<se.3>")
+yield("/echo 少爷公主你的天书完成了")
