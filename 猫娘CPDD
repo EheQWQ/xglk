@@ -322,7 +322,7 @@ while true do
         IPC.vnavmesh.PathfindAndMoveTo(Vector3(-264.42,22.33,-95.694), false)
         WaitForVnavMesh()
     elseif SuccessCount == 5 then
-        IPC.vnavmesh.PathfindAndMoveTo(Vector3(-260.486,22.307,-75.446), false)
+        IPC.vnavmesh.PathfindAndMoveTo(Vector3(-260.548,22.304,-75.413), false)
         WaitForVnavMesh()
     elseif SuccessCount == 10 then
         IPC.vnavmesh.PathfindAndMoveTo(Vector3(-284.056,22.115,-71.043), false)
