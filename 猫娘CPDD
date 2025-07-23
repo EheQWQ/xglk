@@ -205,7 +205,7 @@ local function WaitForFishingItem(maxWaitSeconds)
         IPC.AutoHook.SetPluginState(false)
         yield("/wait 1")
         while Svc.Condition[6] do
-            yield("/ac Quit")
+            yield("/ac 中断")
             yield("/wait 0.1")
         end
         yield("/echo [HybridFishing] Timeout waiting for item ID "..itemId)
@@ -325,7 +325,7 @@ while true do
         IPC.vnavmesh.PathfindAndMoveTo(Vector3(-256.805,21.894,-84.845), false)
         WaitForVnavMesh()
     elseif SuccessCount == 10 then
-        IPC.vnavmesh.PathfindAndMoveTo(Vector3(-284.056,22.115,-71.043), false)
+        IPC.vnavmesh.PathfindAndMoveTo(Vector3(-264.42,22.33,-95.694), false)
         WaitForVnavMesh()
     end
 
