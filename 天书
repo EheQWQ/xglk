@@ -17,9 +17,10 @@
 ********************************************************************************
 ]]
 
-DodgingPlugin                       = "VBM"
 
-WonderousTailsDuties = {
+import("System.Numerics")
+
+local wonderousTailsDuties = {
     { -- type 0: extreme trials
         { instanceId=20010, dutyId=297, dutyName="迦楼罗歼殛战", minLevel=50 },
         { instanceId=20009, dutyId=296, dutyName="泰坦歼殛战", minLevel=50 },
@@ -74,12 +75,12 @@ WonderousTailsDuties = {
         { dutyName="伊甸希望乐园 共鸣之章", dutyId=903, minLevel=80 },
         { dutyName="伊甸希望乐园 再生之章", dutyId=942, minLevel=80 },
     },
-    { -- type 5: leveling dungeons
+    { -- type 1: leveling dungeons
         { dutyName="1-49级迷宫或讨伐战", dutyId=172, minLevel=15 }, --毒雾洞窟黄金谷
         { dutyName="51-59级/61-69级/71-79级迷宫", dutyId=1064, minLevel=53 }, --天山绝顶索姆阿尔灵峰
         { dutyName="81-89级/91-99级迷宫", dutyId=970, minLevel=81 }, --末日树海万相森国
     },
-    { -- type 6: expansion cap dungeons
+    {                                                                                            -- type 6: expansion cap dungeons
         { dutyName="50或60级迷宫", dutyId=1063, minLevel=15 }, --幻龙残骸密约之塔
         { dutyName="70或80级迷宫", dutyId=1172, minLevel=70 }, --沉没神殿斯卡拉遗迹
         { dutyName="90级迷宫", dutyId=973, minLevel=90 }, --末世终迹
@@ -122,30 +123,32 @@ WonderousTailsDuties = {
     }
 }
 
-Khloe = {
-    x = -19.346453,
-    y = 210.99998,
-    z = 0.086749226,
+local currentLevel = Player.Job.Level
+local khloe = {
+    x = -19.97,
+    y = 211.0,
+    z = 0.53,
     name = "库洛·阿里亚珀"
 }
+local khloeVector3 = Vector3(khloe.x, khloe.y, khloe.z)
 
 -- Region: Functions ---------------------------------------------------------------------------------
 
 function SearchWonderousTailsTable(type, data, text)
     if type == 0 then -- ex trials are indexed by instance#
-        for _, duty in ipairs(WonderousTailsDuties[type+1]) do
+        for _, duty in ipairs(wonderousTailsDuties[type + 1]) do
             if duty.instanceId == data then
                 return duty
             end
         end
     elseif type == 1 or type == 5 or type == 6 or type == 7 then -- dungeons, level range ex trials
-        for _, duty in ipairs(WonderousTailsDuties[type+1]) do
+        for _, duty in ipairs(wonderousTailsDuties[type + 1]) do
             if duty.dutyName == text then
                 return duty
             end
         end
     elseif type == 4 or type == 8 then -- normal raids
-        for _, duty in ipairs(WonderousTailsDuties[type+1]) do
+        for _, duty in ipairs(wonderousTailsDuties[type + 1]) do
             if duty.dutyName == text then
                 return duty
             end
@@ -155,42 +158,47 @@ end
 
 -- Region: Main ---------------------------------------------------------------------------------
 
-CurrentLevel = GetLevel()
-
 -- Pick up a journal if you need one
-if not HasWeeklyBingoJournal() or IsWeeklyBingoExpired() or WeeklyBingoNumPlacedStickers() == 9 then
-    if not IsInZone(478) then
-        yield("/tp 田园郡")
+if Player.Bingo.IsWeeklyBingoExpired or Player.Bingo.WeeklyBingoNumPlacedStickers == 9 or not Player.Bingo.HasWeeklyBingoJournal then
+    if not (Svc.ClientState.TerritoryType == 478) then
+        yield("/li tp Idyllshire")
         yield("/wait 1")
     end
-    while not (IsInZone(478) and IsPlayerAvailable()) do
+
+    repeat
         yield("/wait 1")
-    end
-    PathfindAndMoveTo(Khloe.x, Khloe.y, Khloe.z)
-    while(GetDistanceToPoint(Khloe.x, Khloe.y, Khloe.z) > 5) do
+    until Svc.ClientState.TerritoryType == 478 and Player.Available
+
+    IPC.vnavmesh.PathfindAndMoveTo(khloeVector3, false)
+
+    repeat
         yield("/wait 1")
-    end
-    yield("/target "..Khloe.name)
+    until not (IPC.vnavmesh.PathfindInProgress() and IPC.vnavmesh.IsRunning())
+
+    yield("/target " .. khloe.name)
     yield("/wait 1")
     yield("/interact")
-    while not IsAddonVisible("SelectString") do
+
+    while not Addons.GetAddon("SelectString").Ready do
         yield("/click Talk Click")
         yield("/wait 1")
     end
-    if IsAddonVisible("SelectString") then
-        if not HasWeeklyBingoJournal() then
+
+    if Addons.GetAddon("SelectString").Ready then
+        if not Player.Bingo.HasWeeklyBingoJournal then
             yield("/callback SelectString true 0")
-        elseif IsWeeklyBingoExpired() then
+        elseif Player.Bingo.IsWeeklyBingoExpired then
             yield("/callback SelectString true 1")
-        elseif WeeklyBingoNumPlacedStickers() == 9 then
+        elseif Player.Bingo.WeeklyBingoNumPlacedStickers == 9 then
             yield("/callback SelectString true 0")
         end
-        
     end
-    while GetCharacterCondition(32) do
+
+    while Svc.Condition[32] do
         yield("/click Talk Click")
         yield("/wait 1")
     end
+
     yield("/wait 1")
 end
 
@@ -198,81 +206,69 @@ end
 -- skip 14: Endwalker raids (not doable solo unsynced)
 -- skip 15: PVP
 for i = 0, 12 do
-    if GetWeeklyBingoTaskStatus(i) == 0 then
-        local key = GetWeeklyBingoOrderDataKey(i)
-        local type = GetWeeklyBingoOrderDataType(key)
-        local data = GetWeeklyBingoOrderDataData(key)
-        local text = GetWeeklyBingoOrderDataText(key)
-        LogInfo("[WondrousTails] Wonderous Tails #"..(i+1).." Key: "..key)
-        LogInfo("[WondrousTails] Wonderous Tails #"..(i+1).." Type: "..type)
-        LogInfo("[WondrousTails] Wonderous Tails #"..(i+1).." Data: "..data)
-        LogInfo("[WondrousTails] Wonderous Tails #"..(i+1).." Text: "..text)
-
+    if Player.Bingo:GetWeeklyBingoTaskStatus(i) == WeeklyBingoTaskStatus.Open then
+        local dataRow = Player.Bingo:GetWeeklyBingoOrderDataRow(i)
+        local type = dataRow.Type
+        local data = dataRow.Data
+        local text = dataRow.Text.Description
         local duty = SearchWonderousTailsTable(type, data, text)
+        local dutyMode = "Support"
+
+        Dalamud.Log("[WondrousTails] Wonderous Tails #" .. (i + 1) .. " Type: " .. type)
+        Dalamud.Log("[WondrousTails] Wonderous Tails #" .. (i + 1) .. " Data: " .. data)
+        Dalamud.Log("[WondrousTails] Wonderous Tails #" .. (i + 1) .. " Text: " .. text)
+
         if duty == nil then
             yield("/echo duty is nil")
         end
-        local dutyMode = "Support"
+
         if duty ~= nil then
-            if CurrentLevel < duty.minLevel then
-                yield("/echo [WonderousTails] 由于等级过低，无法进入："..duty.dutyName.." .")
+            if currentLevel < duty.minLevel then
+                yield("/echo [WonderousTails] Cannot queue for " .. duty.dutyName .. " as level is too low.")
+
                 duty.dutyId = nil
             elseif type == 0 then -- trials
-                yield("/autoduty cfg Unsynced true")
+                IPC.AutoDuty.SetConfig("Unsynced", "true")
+
                 dutyMode = "Trial"
             elseif type == 4 then -- raids
-                yield("/autoduty cfg Unsynced true")
+                IPC.AutoDuty.SetConfig("Unsynced", "true")
+
                 dutyMode = "Raid"
-            elseif CurrentLevel - duty.minLevel <= 20 then
-                -- yield("/autoduty cfg dutyModeEnum 1") -- TODO: test this when it gets released
-                -- yield("/autoduty cfg Unsynced false")
+            elseif currentLevel - duty.minLevel < 20 then
+                IPC.AutoDuty.SetConfig("Unsynced", "false")
+
                 dutyMode = "Support"
             else
-                -- yield("/autoduty cfg dutyModeEnum 8")
-                yield("/autoduty cfg Unsynced true")
+                IPC.AutoDuty.SetConfig("Unsynced", "true")
+
                 dutyMode = "Regular"
             end
 
             if duty.dutyId ~= nil then
-                yield("/echo Queuing duty TerritoryId#"..duty.dutyId.." for Wonderous Tails #"..(i+1))
-                yield("/autoduty run "..dutyMode.." "..duty.dutyId.." 1 true")
-                if DodgingPlugin == "BMR" then
-                    yield("/bmrai on")
-                elseif DodgingPlugin == "VBM" then
-                    yield("/vbmai on")
-                end
-                while GetCharacterCondition(34) or GetCharacterCondition(51) or GetCharacterCondition(56) do -- wait for duty to be finished
-                    if GetCharacterCondition(2) and i > 4 then -- dead, not a dungeon
-                        yield("/echo Died to "..duty.dutyName..". Skipping.")
-                        repeat
-                            yield("/wait 1")
-                        until not GetCharacterCondition(2)
-                        LeaveDuty()
-                        break
-                    end
+                -- IPC.AutoDuty.Run(duty.dutyId, 1, false)
+
+                yield("/echo Queuing duty TerritoryId#" .. duty.dutyId .. " for Wonderous Tails #" .. (i + 1))
+                yield("/autoduty run " .. dutyMode .. " " .. duty.dutyId .. " 1 true")
+                yield("/wait 10")
+
+                repeat
                     yield("/wait 1")
-                end
+                until not IPC.AutoDuty.IsLooping()
+
                 yield("/wait 10")
             else
                 if duty.dutyName ~= nil then
-                    yield("/echo Wonderous Tails Script does not support Wonderous Tails entry #"..(i+1).." "..duty.dutyName)
-                    LogInfo("[WonderousTails] Wonderous Tails Script does not support Wonderous Tails entry #"..(i+1).." "..duty.dutyName)
+                    yield("/echo Wonderous Tails Script does not support Wonderous Tails entry #" .. (i + 1) .. " " .. duty.dutyName)
+                    Dalamud.Log("[WonderousTails] Wonderous Tails Script does not support Wonderous Tails entry #" .. (i + 1) .. " " .. duty.dutyName)
                 else
-                    yield("/echo Wonderous Tails Script does not support Wonderous Tails entry #"..(i+1))
-                    LogInfo("[WonderousTails] Wonderous Tails Script does not support Wonderous Tails entry #"..(i+1))
+                    yield("/echo Wonderous Tails Script does not support Wonderous Tails entry #" .. (i + 1))
+                    Dalamud.Log("[WonderousTails] Wonderous Tails Script does not support Wonderous Tails entry #" .. (i + 1))
                 end
             end
         end
     end
-
-    -- if GetWeeklyBingoTaskStatus(i) == 1
-    --    and (not StopPlacingStickersAt7 or WeeklyBingoNumPlacedStickers() < 7)
-    -- then
-    --     if not IsAddonVisible("WeeklyBingo") then
-    --         yield("/callback WeeklyBingo true 2 "..i)
-    --         yield("/wait 1")
-    --     end
-    -- end
 end
 
-yield("/echo 少爷公主你的天书完成了")
+
+yield("/echo baby i love you <se.3>")
