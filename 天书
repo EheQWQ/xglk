@@ -136,19 +136,19 @@ local khloeVector3 = Vector3(khloe.x, khloe.y, khloe.z)
 
 function SearchWonderousTailsTable(type, data, text)
     if type == 0 then -- ex trials are indexed by instance#
-        for _, duty in ipairs(wonderousTailsDuties[type + 1]) do
+        for _, duty in ipairs(wonderousTailsDuties[type+1]) do
             if duty.instanceId == data then
                 return duty
             end
         end
     elseif type == 1 or type == 5 or type == 6 or type == 7 then -- dungeons, level range ex trials
-        for _, duty in ipairs(wonderousTailsDuties[type + 1]) do
+        for _, duty in ipairs(wonderousTailsDuties[type+1]) do
             if duty.dutyName == text then
                 return duty
             end
         end
     elseif type == 4 or type == 8 then -- normal raids
-        for _, duty in ipairs(wonderousTailsDuties[type + 1]) do
+        for _, duty in ipairs(wonderousTailsDuties[type+1]) do
             if duty.dutyName == text then
                 return duty
             end
@@ -161,7 +161,7 @@ end
 -- Pick up a journal if you need one
 if Player.Bingo.IsWeeklyBingoExpired or Player.Bingo.WeeklyBingoNumPlacedStickers == 9 or not Player.Bingo.HasWeeklyBingoJournal then
     if not (Svc.ClientState.TerritoryType == 478) then
-        yield("/li tp Idyllshire")
+        yield("/tp 田园郡")
         yield("/wait 1")
     end
 
